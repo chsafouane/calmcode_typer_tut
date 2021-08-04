@@ -1,4 +1,7 @@
 import typer
+from typing import List
+from pathlib import Path
+
 
 app = typer.Typer(name="demo", add_completion=False, help="This is a demo app.")
 
@@ -34,6 +37,23 @@ def add(n1: int = typer.Argument(..., help="An integer"),
     """
     print(n1 + n2)
 
+
+def check_file_exists(paths):
+    for p in paths:
+        if not p.exists():
+            print(f"The path you've supplied {p} does not exist.")
+            raise typer.Exit(code=1)
+    return paths
+
+@app.command()
+def word_count(paths: List[Path] = typer.Argument(...,
+                                                help="The file to count the words in.",
+                                                callback=check_file_exists)):
+    """Counts the number of words in a file"""
+    for p in paths:
+        texts = p.read_text().split("\n")
+        n_words = len(set(w for t in texts for w in t.split(" ")))
+        print(f"In total there are {n_words} words in {p}.")
 
 if __name__ == "__main__":
     app()
