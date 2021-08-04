@@ -25,7 +25,7 @@ def goodbye_world(name):
 
 @app.command()
 def add(n1: int = typer.Argument(..., help="An integer"), 
-        n2: int = typer.Argument(..., help="An integer")):
+        n2: int = typer.Argument(1, help="An integer")):
     """Add two numbers
 
     Args:
